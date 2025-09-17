@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Goldilocks Bakeshop — Fresh from the Oven</title>
+  <meta name="description" content="Goldilocks-inspired bakeshop. Fresh cakes, pastries, breads, and party treats. Order online or pick up in-store." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%8D%9E%3C/text%3E%3C/svg%3E">
+  <style>
+    :root{
+      --accent:#b77a2a; /* gold/brand */
+      --muted:#666;
+      --bg:#fff8f0;
+      --card:#ffffff;
+      --glass: rgba(255,255,255,0.6);
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg),#fff);color:#222}
+    header{position:sticky;top:0;background:linear-gradient(180deg,rgba(255,255,255,0.9),rgba(255,255,255,0.7));backdrop-filter: blur(6px);border-bottom:1px solid rgba(0,0,0,0.06);z-index:40}
+    .container{max-width:1100px;margin:0 auto;padding:1rem}
+    .nav{display:flex;align-items:center;gap:1rem;justify-content:space-between}
+    .brand{display:flex;align-items:center;gap:.6rem;font-weight:700;color:var(--accent)}
+    .brand .logo{width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,#fff, #FFEFD5);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(183,122,42,0.12)}
+    nav a{color:inherit;text-decoration:none;padding:.45rem .6rem;border-radius:8px}
+    nav a:hover{background:var(--glass)}
+    .cta{background:var(--accent);color:white;padding:.5rem .8rem;border-radius:8px}
+
+    /* Hero */
+    .hero{display:grid;grid-template-columns:1fr 420px;gap:2rem;align-items:center;padding:3rem 0}
+    .hero h1{margin:0;font-size:2rem}
+    .hero p{color:var(--muted)}
+    .hero .hero-card{background:linear-gradient(180deg,#fff,#fff8f0);padding:1rem;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,0.06)}
+
+    /* Products */
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+    .card{background:var(--card);border-radius:12px;padding:1rem;box-shadow:0 8px 20px rgba(0,0,0,0.05);display:flex;flex-direction:column}
+    .card img{width:100%;height:180px;object-fit:cover;border-radius:10px}
+    .card h3{margin:.6rem 0 .2rem}
+    .price{font-weight:700;color:var(--accent)}
+    .meta{display:flex;justify-content:space-between;align-items:center;margin-top:auto}
+
+    /* Cart drawer */
+    .cart-btn{position:relative}
+    .badge{position:absolute;right:-8px;top:-8px;background:#ff4646;color:white;padding:2px 6px;border-radius:999px;font-size:.75rem}
+    .drawer{position:fixed;right:0;top:0;height:100%;width:360px;background:linear-gradient(180deg,#fff,#fff9f2);box-shadow:-20px 0 40px rgba(0,0,0,0.08);transform:translateX(110%);transition:transform .28s ease;padding:1rem;overflow:auto;z-index:60}
+    .drawer.open{transform:translateX(0)}
+
+    /* Footer */
+    footer{padding:2rem 0;color:var(--muted);border-top:1px dashed rgba(0,0,0,0.04)}
+
+    /* Responsive */
+    @media(max-width:980px){
+      .hero{grid-template-columns:1fr}
+      .grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:620px){
+      .grid{grid-template-columns:1fr}
+      .container{padding:.6rem}
+      .hero{padding:1.2rem 0}
+    }
+
+    /* small helpers */
+    .pill{display:inline-block;padding:.25rem .5rem;border-radius:999px;background:#fff2dc;font-size:.85rem;color:var(--muted)}
+    .muted{color:var(--muted)}
+    button{cursor:pointer}
+    .sr-only{position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand" aria-label="Goldilocks Bakeshop">
+        <div class="logo" aria-hidden>🍰</div>
+        <div>
+          <div style="font-size:.95rem">Goldilocks Bakeshop</div>
+          <div style="font-size:.75rem;color:var(--muted)">Fresh cakes &amp; party treats</div>
+        </div>
+      </div>
+      <nav aria-label="Main navigation">
+        <a href="#products">Menu</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+        <button class="cta" id="checkoutNow">Order Now</button>
+        <button class="cart-btn" id="openCart" aria-label="Open cart" title="Cart">🛒 <span class="badge" id="cartCount" style="display:none">0</span></button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero" aria-labelledby="heroTitle">
+      <div>
+        <h1 id="heroTitle">Sweet moments, freshly baked.</h1>
+        <p>Classic Filipino favorites and international pastries — cakes, ensaymada, hopia, and more. Browse our menu and add to cart. Pickup and local delivery available.</p>
+        <div style="display:flex;gap:.6rem;margin-top:1rem;flex-wrap:wrap">
+          <span class="pill">Open today • 8:00 AM – 8:00 PM</span>
+          <span class="pill">Pickup & Delivery</span>
+        </div>
+
+        <div style="margin-top:1.6rem">
+          <button class="cta" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">See Menu</button>
+          <button style="margin-left:.6rem" onclick="openCart()">View Cart</button>
+        </div>
+      </div>
+
+      <aside class="hero-card" aria-hidden>
+        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=3e4ad6b6b88d48b5a1e7f8e06d9d6f60" alt="Display of cakes" style="width:100%;border-radius:10px;">
+        <div style="margin-top:.8rem">
+          <strong>Classic Ube Cake</strong>
+          <p class="muted" style="margin:.3rem 0 0;font-size:.95rem">Moist ube chiffon layered with creamy ube frosting. Serves 6–8.</p>
+          <div style="margin-top:.6rem;font-weight:700;color:var(--accent)">₱1,450</div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="products" aria-label="Products">
+      <h2 style="margin:1rem 0 0">Menu</h2>
+      <p class="muted">Popular items — click Add to Cart to try them.</p>
+      <div class="grid" id="productGrid" style="margin-top:1rem">
+        <!-- product cards inserted by JS -->
+      </div>
+    </section>
+
+    <section id="about" style="margin-top:2rem">
+      <h2>About</h2>
+      <p class="muted">Inspired by classic bakery flavors with modern freshness. We bake daily using local ingredients and deliver smiles for every celebration.</p>
+    </section>
+
+    <section id="contact" style="margin-top:2rem">
+      <h2>Contact</h2>
+      <p class="muted">Questions? Send us a message or call <strong>+63 912 345 6789</strong>.</p>
+      <form id="contactForm" style="max-width:600px;display:grid;gap:.6rem;margin-top:.6rem" onsubmit="handleContact(event)">
+        <label class="sr-only" for="name">Your name</label>
+        <input id="name" required placeholder="Your name" />
+        <label class="sr-only" for="email">Email</label>
+        <input id="email" type="email" required placeholder="Email" />
+        <label class="sr-only" for="message">Message</label>
+        <textarea id="message" rows="4" required placeholder="Message (e.g. order inquiry, pickup time)"></textarea>
+        <div>
+          <button type="submit" class="cta">Send Message</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <div id="cartDrawer" class="drawer" aria-hidden="true">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+      <h3>Your Cart</h3>
+      <div>
+        <button onclick="closeCart()">Close</button>
+      </div>
+    </div>
+    <div id="cartItems" aria-live="polite"></div>
+    <div style="margin-top:1rem;border-top:1px solid rgba(0,0,0,0.06);padding-top:1rem">
+      <div style="display:flex;justify-content:space-between;align-items:center"><div class="muted">Subtotal</div><div id="subtotal">₱0</div></div>
+      <div style="margin-top:.6rem"><button class="cta" id="checkoutBtn">Proceed to Checkout</button></div>
+      <div style="margin-top:.6rem;color:var(--muted);font-size:.9rem">(Demo checkout — no payment processed)</div>
+    </div>
+  </div>
+
+  <footer class="container">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap">
+      <div>
+        <strong>Goldilocks Bakeshop</strong>
+        <div class="muted">123 Bakery Lane, Quezon City</div>
+      </div>
+      <div class="muted">© <span id="year"></span> Goldilocks Bakeshop</div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const PRODUCTS = [
+      {id:1, title:'Ube Cake (8")', price:1450, desc:'Classic ube chiffon with ube buttercream', img:'https://images.unsplash.com/photo-1544018363-6b06b01a63b4?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=29b0f0b1ad4c5f3d0a2f3b6b7d1c2f6f'},
+      {id:2, title:'Ensaymada (Buttery)', price:95, desc:'Soft ensaymada topped with butter and sugar', img:'https://images.unsplash.com/photo-1600280802421-57da3f8e7c2d?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=aa5b9381d8f2a1b3d4e5f6a7b8c9d0e1'},
+      {id:3, title:'Pandan Cupcakes (6pcs)', price:420, desc:'Pandan chiffon cupcakes with coconut frosting', img:'https://images.unsplash.com/photo-1582719478250-8f8b5f08b9c4?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=8d2f7c4b1f2a1c3d4e5f6a7b8c9d0e2f'},
+      {id:4, title:'Hopia Assorted', price:220, desc:'Assorted hopia (mongo, ube)', img:'https://images.unsplash.com/photo-1559628234-8a4d0f9f0b76?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=2a3b4c5d6e7f8190a1b2c3d4e5f6a7b8'},
+      {id:5, title:'Mamon (3 pcs)', price:120, desc:'Soft and fluffy mamon with butter', img:'https://images.unsplash.com/photo-1568605114967-8130f3a36994?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=8192a3b4c5d6e7f8190a1b2c3d4e5f6a'},
+      {id:6, title:'Chocolate Roll', price:260, desc:'Moist chocolate roll cake', img:'https://images.unsplash.com/photo-1599785209792-3d0b1e7c1b8b?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e'}
+    ];
+
+    function currency(n){return '₱' + n.toLocaleString('en-PH')}
+
+    // Render products
+    const grid = document.getElementById('productGrid');
+    PRODUCTS.forEach(p=>{
+      const card = document.createElement('article');
+      card.className = 'card';
+      card.innerHTML = `
+        <img src="${p.img}" alt="${p.title}">
+        <h3>${p.title}</h3>
+        <div class="muted" style="font-size:.95rem">${p.desc}</div>
+        <div class="meta"><div class="price">${currency(p.price)}</div><div><button onclick="addToCart(${p.id})">Add to Cart</button></div></div>
+      `;
+      grid.appendChild(card);
+    });
+
+    // Cart logic
+    let CART = JSON.parse(localStorage.getItem('gb_cart') || '{}');
+    function saveCart(){localStorage.setItem('gb_cart', JSON.stringify(CART)); renderCart();}
+
+    function addToCart(id){
+      const item = PRODUCTS.find(x=>x.id===id);
+      if(!item) return;
+      if(CART[id]) CART[id].qty += 1; else CART[id] = {id:item.id,title:item.title,price:item.price,qty:1};
+      saveCart();
+      showToast(`${item.title} added to cart`);
+    }
+
+    function removeItem(id){ delete CART[id]; saveCart(); }
+    function changeQty(id, delta){ if(!CART[id]) return; CART[id].qty += delta; if(CART[id].qty < 1) delete CART[id]; saveCart(); }
+
+    function renderCart(){
+      const el = document.getElementById('cartItems'); el.innerHTML = '';
+      const keys = Object.keys(CART);
+      const count = keys.reduce((s,k)=>s + CART[k].qty,0);
+      const cartCount = document.getElementById('cartCount');
+      if(count>0){cartCount.style.display='inline-block'; cartCount.textContent = count;} else cartCount.style.display='none';
+
+      if(keys.length===0){ el.innerHTML = '<div class="muted">Your cart is empty. Add some pastries!</div>'; document.getElementById('subtotal').textContent = currency(0); return }
+      let subtotal=0;
+      keys.forEach(k=>{
+        const it = CART[k]; subtotal += it.price * it.qty;
+        const row = document.createElement('div');
+        row.style.display='flex';row.style.gap='8px';row.style.alignItems='center';row.style.padding='8px 0';
+        row.innerHTML = `<div style="flex:1"><strong>${it.title}</strong><div class="muted">${currency(it.price)} &times; ${it.qty}</div></div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <button aria-label="increase" onclick="changeQty(${it.id},1)">+</button>
+            <button aria-label="decrease" onclick="changeQty(${it.id},-1)">−</button>
+            <button aria-label="remove" onclick="removeItem(${it.id})">Remove</button>
+          </div>`;
+        el.appendChild(row);
+      });
+      document.getElementById('subtotal').textContent = currency(subtotal);
+    }
+
+    function openCart(){ document.getElementById('cartDrawer').classList.add('open'); document.getElementById('cartDrawer').setAttribute('aria-hidden','false'); }
+    function closeCart(){ document.getElementById('cartDrawer').classList.remove('open'); document.getElementById('cartDrawer').setAttribute('aria-hidden','true'); }
+
+    function showToast(msg){
+      const t = document.createElement('div'); t.textContent = msg; t.style.position='fixed'; t.style.bottom='20px'; t.style.left='50%'; t.style.transform='translateX(-50%)'; t.style.background='rgba(0,0,0,0.8)'; t.style.color='white'; t.style.padding='10px 14px'; t.style.borderRadius='12px'; t.style.zIndex=1000; document.body.appendChild(t);
+      setTimeout(()=>{t.style.transition='opacity .5s';t.style.opacity=0; setTimeout(()=>t.remove(),500)},1500);
+    }
+
+    document.getElementById('openCart').addEventListener('click', openCart);
+    document.getElementById('checkoutNow').addEventListener('click', ()=>{ openCart(); document.getElementById('cartDrawer').scrollIntoView(); });
+    document.getElementById('checkoutBtn').addEventListener('click', ()=>{
+      const keys = Object.keys(CART); if(keys.length===0){ showToast('Cart is empty'); return }
+      // Demo checkout: create an order summary and clear cart
+      const items = keys.map(k=>`${CART[k].title} x${CART[k].qty}`).join('\n');
+      alert('ORDER SUMMARY:\n' + items + '\n\nThank you! This is a demo checkout.');
+      CART = {}; saveCart(); closeCart();
+    });
+
+    function handleContact(e){ e.preventDefault(); const name=document.getElementById('name').value; const email=document.getElementById('email').value; const message=document.getElementById('message').value; alert('Message received — thank you, ' + name + '!'); e.target.reset(); }
+
+    // initialize
+    renderCart();
+  </script>
+</body>
+</html>
